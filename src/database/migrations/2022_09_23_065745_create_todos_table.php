@@ -15,7 +15,6 @@ return new class extends Migration
     {
         Schema::create('todos', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('date');
             $table->string('content');
             $table->boolean('completed')->default(false);
             $table->foreignId('user_id')->onDelete('cascade');

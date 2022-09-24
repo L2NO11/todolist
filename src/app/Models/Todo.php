@@ -5,17 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class todo extends Model
+class Todo extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'date',
         'content',
         'completed',
         'user_id',
     ];
     public function user()
     {
-        return $this->belongsTo(User::class,'user_id','user_id');
+        return $this->belongsTo(User::class);
     }
 }
