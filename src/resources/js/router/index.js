@@ -21,7 +21,7 @@ const routes = [
     },
     {
         path: '/',
-        name: 'home',
+        name: 'dashboard',
         component: () => import('@/page/HomePage.vue'),
         meta: {
             middleware: "auth:api",
