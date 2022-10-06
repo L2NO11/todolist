@@ -1,10 +1,11 @@
-version: '3.8'
+version: '3'
 
 services:
   nginx:
     build:
       context: .
       dockerfile: nginx.dockerfile
+    container_name: nginx
     ports:
       - 8080:80
     volumes:
@@ -13,7 +14,8 @@ services:
       - mysql
       - php
   mysql:
-    image: mysql:5.7
+    image: mysql:latest
+    container_name: mysql
     ports:
       - 3306:3306
     environment: 
@@ -23,6 +25,17 @@ services:
       MYSQL_ROOT_PASSWORD: secret
     volumes:
       - ./mysql:/var/lib/mysql
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: myadmin
+    ports:
+      - 90:80
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: secret
+    depends_on:
+      - mysql
   php:
     build:
       context: .
