@@ -14,12 +14,23 @@ use App\Http\Controllers\TodoController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::post('/auth/register',[AuthController::class,'register']);
-Route::get('/auth/me',[AuthController::class,'user'])->middleware('auth:api');
-Route::get('/todo/all',[TodoController::class,'getAll'])->middleware('auth:api');
-Route::get('/todo/add',[TodoController::class,'addTodo'])->middleware('auth:api');
-Route::get('/todo/find/date',[TodoController::class,'findWithDate'])->middleware('auth:api');
-Route::get('/todo/find/job',[TodoController::class,'findJob'])->middleware('auth:api');
-Route::put('/todo/update/job',[TodoController::class,'changeJobName'])->middleware('auth:api');
-Route::put('/todo/update/complete',[TodoController::class,'makeComplete'])->middleware('auth:api');
-Route::delete('/todo/delete',[TodoController::class,'deleteJob'])->middleware('auth:api');
+
+Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::get('/me', [AuthController::class, 'user'])->middleware('auth:api');
+});
+
+
+Route::group(['prefix' => 'todo', 'as' => 'todo.', "middleware" => "auth:api"], function () {
+    Route::get('/all', [TodoController::class, 'getAll']);
+    Route::get('/add', [TodoController::class, 'addTodo']);
+    Route::delete('/delete', [TodoController::class, 'deleteJob']);
+    Route::group(['prefix' => 'find', 'as' => 'find.'], function () {
+        Route::get('/date', [TodoController::class, 'findWithDate']);
+        Route::get('/job', [TodoController::class, 'findJob']);
+    });
+    Route::group(['prefix' => 'update', 'as' => 'update.'], function () {
+        Route::put('/job', [TodoController::class, 'changeJobName']);
+        Route::put('/complete', [TodoController::class, 'makeComplete']);
+    });
+});
