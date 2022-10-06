@@ -24,13 +24,17 @@ const routes = [
         name: 'home',
         component: () => import('../page/HomePage.vue'),
         meta: {
+            title: "Home",
             middleware: "auth:api",
         }
     },
     {
         path: '/:pathMatch(.*)*',
         name: 'notfound',
-        component: () => import('../page/PathNotFound.vue')
+        component: () => import('../page/PathNotFound.vue'),
+        meta: {
+            title: "Not Found",
+        }
     },
 ];
 

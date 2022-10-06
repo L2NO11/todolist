@@ -1,5 +1,5 @@
 <template>
-    <BaseLayout> </BaseLayout>
+    <div>Home</div>
 </template>
 
 <script>

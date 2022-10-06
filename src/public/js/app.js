@@ -23617,6 +23617,7 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_page_HomePage_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../page/HomePage.vue */ "./resources/js/page/HomePage.vue"));
   },
   meta: {
+    title: "Home",
     middleware: "auth:api"
   }
 }, {
@@ -23624,6 +23625,9 @@ var routes = [{
   name: 'notfound',
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_page_PathNotFound_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../page/PathNotFound.vue */ "./resources/js/page/PathNotFound.vue"));
+  },
+  meta: {
+    title: "Not Found"
   }
 }];
 var router = (0,vue_router__WEBPACK_IMPORTED_MODULE_1__.createRouter)({
