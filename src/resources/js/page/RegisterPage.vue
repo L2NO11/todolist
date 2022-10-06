@@ -1,10 +1,15 @@
 <template>
     <h1>Register</h1>
-    <!-- <ul v-if="errors.length !== 0">
-        <li v-for="(item, index) in errors" :key="index">{{ item }}</li>
-    </ul> -->
-    <p>Firstname</p>
-    <input type="text" v-model="user.fname" />
+    <div class="mb-3">
+        <label for="fname" class="form-label">Firstname</label>
+        <input
+            type="text"
+            class="form-control"
+            id="fname"
+            v-model="user.fname"
+        />
+    </div>
+
     <ul v-if="errors.fname.length !== 0">
         <li v-for="(item, index) in errors.fname" :key="index">{{ item }}</li>
     </ul>
@@ -30,10 +35,10 @@
     <br />
     <button @click="register">Register</button>
     <br />
-    <router-link :to="{ name: 'register' }">Register Now!</router-link>
+    <router-link :to="{ name: 'login' }">Register Now!</router-link>
 </template>
 <script>
-import { reactive, ref } from "vue";
+import { reactive, ref, watchEffect } from "vue";
 export default {
     name: "RegisterPage",
     setup() {
@@ -44,6 +49,7 @@ export default {
             password: "",
         });
         const confirm_password = ref("");
+        const confirm_password_pass = ref(true);
         const errors = reactive({
             fname: [],
             lname: [],
@@ -57,11 +63,11 @@ export default {
                 user.lname.length !== 0 &&
                 user.email.length !== 0
             ) {
-                buttonIsDisable.value =
+                confirm_password_pass.value =
                     user.password !== confirm_password.value;
                 return;
             }
-            buttonIsDisable.value = true;
+            confirm_password_pass.value = true;
         });
         const process = ref(true);
         const register = async () => {

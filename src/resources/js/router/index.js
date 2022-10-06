@@ -1,10 +1,10 @@
 import {createRouter, createWebHistory } from 'vue-router'
-import store from '@/store'
+import store from '../store'
 const routes = [
     {
         name: "login",
         path: "/login",
-        component:  () => import('@/page/LoginPage.vue'),
+        component:  () => import('../page/LoginPage.vue'),
         meta: {
             middleware: "guest",
             title: `Login`
@@ -13,7 +13,7 @@ const routes = [
     {
         name: "register",
         path: "/register",
-        component:  () => import('@/page/RegisterPage.vue'),
+        component:  () => import('../page/RegisterPage.vue'),
         meta: {
             middleware: "guest",
             title: `Register`
@@ -21,17 +21,16 @@ const routes = [
     },
     {
         path: '/',
-        name: 'dashboard',
-        component: () => import('@/page/HomePage.vue'),
+        name: 'home',
+        component: () => import('../page/HomePage.vue'),
         meta: {
             middleware: "auth:api",
-            title: `Dashboard`
         }
     },
     {
         path: '/:pathMatch(.*)*',
         name: 'notfound',
-        component: () => import('@/page/PathNotFound.vue')
+        component: () => import('../page/PathNotFound.vue')
     },
 ];
 
@@ -44,7 +43,7 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title
     if (to.meta.middleware == "guest") {
         if (store.state.authenticated) {
-            next({ name: "dashboard" })
+            next({ name: "home" })
         }
         next()
     } else {

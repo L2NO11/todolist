@@ -23636,7 +23636,7 @@ router.beforeEach(function (to, from, next) {
   if (to.meta.middleware == "guest") {
     if (_store__WEBPACK_IMPORTED_MODULE_0__["default"].state.authenticated) {
       next({
-        name: "dashboard"
+        name: "home"
       });
     }
 

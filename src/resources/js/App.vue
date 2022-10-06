@@ -1,10 +1,14 @@
 <template>
-    <h1>Todo list App</h1>
     <router-view />
 </template>
 
-<script>
-export default {};
+<script setup>
+import { onMounted } from "vue";
+import { useStore } from "vuex";
+onMounted(() => {
+    const store = useStore();
+    store.dispatch("checklogined");
+});
 </script>
 
 <style></style>

@@ -1,7 +1,13 @@
-<template>Home</template>
+<template>
+    <BaseLayout> </BaseLayout>
+</template>
 
 <script>
-export default {};
+import BaseLayout from "./layout/Layout.vue";
+export default {
+    name: "HomePage",
+    components: [BaseLayout],
+};
 </script>
 
 <style></style>

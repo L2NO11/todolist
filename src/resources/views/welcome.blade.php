@@ -8,9 +8,10 @@
 
         <!-- Fonts -->
         <link href="https://fonts.bunny.net/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-        @vite(['resources/js/app.js','resources/css/app.css'])
+        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
     </head>
     <body>
-        <div id="app"><router-view /></div>
+        <div id="app"></div>
+        <script src="{{ mix('js/app.js') }}" defer></script>
     </body>
 </html>
