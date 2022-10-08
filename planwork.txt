@@ -1,0 +1,22 @@
+[x]login
+[x]register
+
+[]add todo in list of each user
+[]read todolist of each user
+[]delete todo in list of each user
+[]update todo in list of each user
+
+[]todolist paginagetion for easy watch.
+search by
+ - [] create time
+ - [] todo name
+[]check box for filter completed and incompleted
+[]real delete
+
+-----------------------------------------------
+API ( actually APIs are finished all )
+[x]oauth
+[x]register user
+
+
+
