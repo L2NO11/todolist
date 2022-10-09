@@ -1,7 +1,7 @@
 [x]login
 [x]register
 
-[]add todo in list of each user
+[w]add todo in list of each user 
 []read todolist of each user
 []delete todo in list of each user
 []update todo in list of each user

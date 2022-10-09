@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">LATOS</a>
+            <a class="navbar-brand" href="#">IDIO</a>
             <button
                 class="navbar-toggler"
                 type="button"
@@ -19,15 +19,18 @@
                     style="--bs-scroll-height: 100px"
                 >
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#"
-                            >Home</a
+                        <router-link
+                            class="nav-link active"
+                            :to="{ name: 'todo-list' }"
+                            >Todo-list</router-link
                         >
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="#">Create Task</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link active" href="#">Todo List</a>
+                        <router-link
+                            class="nav-link active"
+                            :to="{ name: 'create' }"
+                            >Create-todo</router-link
+                        >
                     </li>
                 </ul>
                 <ul class="nav justify-content-end">
@@ -41,12 +44,15 @@
 </template>
 <script>
 import { useStore } from "vuex";
+import { useRouter } from "vue-router";
 export default {
     name: "NavBarTodolist",
     setup() {
         const store = useStore();
+        const router = useRouter();
         const logout = () => {
             store.dispatch("logout");
+            router.push({ name: "login" });
         };
         return {
             logout,

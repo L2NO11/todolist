@@ -1,12 +1,15 @@
 import { createStore } from "vuex";
 import {AES, enc}from 'crypto-js';
-import { useRouter } from "vue-router";
 const store = createStore({
     state:{
+        todolist: [],
         authenticated:false,
         token:{}
     },
     getters:{
+        todolist(state){
+            return state.todolist
+        },
         authenticated(state){
             return state.authenticated
         },
@@ -15,6 +18,9 @@ const store = createStore({
         }
     },
     mutations:{
+        SET_TODOLIST (state, value) {
+            state.todolist = value
+        },
         SET_AUTHENTICATED (state, value) {
             state.authenticated = value
         },
@@ -32,6 +38,7 @@ const store = createStore({
                 "scope": "*"
             }
             return await axios.post('/oauth/token',requestBody).then(({data})=>{
+                data.start = new Date
                 commit('SET_TOKEN',data)
                 commit('SET_AUTHENTICATED',true)
                 const envryptedString = AES.encrypt(JSON.stringify(data),process.env.MIX_MY_STORAGE_KEY);
@@ -41,20 +48,26 @@ const store = createStore({
                 commit('SET_AUTHENTICATED',false)
             })
         },
-        checklogined({commit}){
-            const router = useRouter();
+        init({commit,getters}){
             const token = localStorage.getItem("token");
             if (token) {
-                const decrypted = AES.decrypt(token, process.env.MIX_MY_STORAGE_KEY).toString(enc.Utf8);
-                commit('SET_TOKEN',JSON.parse(decrypted))
-                commit('SET_AUTHENTICATED',true)
-                router.push({ name: "home" });
+                const decrypted = JSON.parse(AES.decrypt(token, process.env.MIX_MY_STORAGE_KEY).toString(enc.Utf8));
+                const lifetime = (new Date() - new Date(decrypted.start)) / 1000
+                const {expires_in} = decrypted
+                if(expires_in > lifetime ){
+                    commit('SET_TOKEN',decrypted)
+                    commit('SET_AUTHENTICATED',true)
+                    console.log("init success");
+                }else{
+                    localStorage.clear();
+                }
             }
         },
         logout({commit}){
-            window.localStorage.clear();
+            localStorage.clear();
             commit('SET_TOKEN',{})
             commit('SET_AUTHENTICATED',false)
+            console.log("logout success");
         }
     }
 })

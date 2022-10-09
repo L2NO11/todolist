@@ -1,12 +1,16 @@
 <template>
-    <div>Home</div>
+    <Navbar></Navbar>
+    <router-view />
 </template>
 
 <script>
-import BaseLayout from "./layout/Layout.vue";
+import Navbar from "./layout/Navbar.vue";
 export default {
     name: "HomePage",
-    components: [BaseLayout],
+    components: { Navbar },
+    setup() {
+        return {};
+    },
 };
 </script>
 
