@@ -1,7 +1,7 @@
 <template>
     <div class="createbox card p-5 mx-auto my-5">
         <h3>Create Todo</h3>
-        <form class="m-auto row g-2">
+        <div class="m-auto row g-2">
             <div class="form-floating mb-3">
                 <input
                     type="text"
@@ -31,7 +31,7 @@
                     Create
                 </button>
             </div>
-        </form>
+        </div>
     </div>
 </template>
 

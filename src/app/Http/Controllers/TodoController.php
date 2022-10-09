@@ -12,20 +12,31 @@ class TodoController extends Controller
     public function getAll(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "completed" => ['boolean']
+            "completed" => ["required", 'boolean'],
+            "page" => ["required", "integer"]
         ]);
         if ($validator->fails()) {
             return response()->json([
                 "err" => true,
                 'msg' => $validator->messages()->get('*')
-            ]);
+            ], 200);
         }
-        $qury = Todo::where('user_id', $request->user()->id);
-        if ($request->completed != null) {
-            $qury->where("completed", $request->completed);
+        $quary = Todo::where(
+            [
+                'user_id' => $request->user()->id,
+                'completed' => $request->completed
+            ]
+        )
+            ->orderBy('id', 'DESC');
+        $count =  ceil($quary->count() / 5);
+        if ($count < $request->page || $request->page < 0) {
+            return response()->json(["err" => true, "msg" => "Notfound page"], 200);
         }
-        $todolist = $qury->orderBy('id', 'DESC')->get();
+        $todolist = $quary->offset(5 * ($request->page - 1))
+            ->limit(5)
+            ->get();
         return response()->json([
+            "countPage" => $count,
             "todo" => $todolist
         ]);
     }
