@@ -25,15 +25,16 @@ const routes = [
         component: () => import('../page/HomePage.vue'),
         children: [
             {
-                path: 'todolist/:page/:completed',
-                name: "todo-list",
-                component: () => import('../components/ListComponent.vue'),
-            },
-            {
                 path: 'create',
                 name: "create",
                 component: () => import('../components/CreateComponent.vue'),
-            }
+            },
+            {
+                path: 'todolist/:page/:completed',
+                name: "test",
+                component: () => import('../components/TodolistComponent.vue'),
+            },
+
         ],
         meta: {
             title: "Home",
