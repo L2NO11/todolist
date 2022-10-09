@@ -23617,16 +23617,16 @@ var routes = [{
     return __webpack_require__.e(/*! import() */ "resources_js_page_HomePage_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../page/HomePage.vue */ "./resources/js/page/HomePage.vue"));
   },
   children: [{
-    path: 'todolist/:page/:completed',
-    name: "todo-list",
-    component: function component() {
-      return __webpack_require__.e(/*! import() */ "resources_js_components_ListComponent_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../components/ListComponent.vue */ "./resources/js/components/ListComponent.vue"));
-    }
-  }, {
     path: 'create',
     name: "create",
     component: function component() {
       return __webpack_require__.e(/*! import() */ "resources_js_components_CreateComponent_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../components/CreateComponent.vue */ "./resources/js/components/CreateComponent.vue"));
+    }
+  }, {
+    path: 'todolist/:page/:completed',
+    name: "test",
+    component: function component() {
+      return __webpack_require__.e(/*! import() */ "resources_js_components_TodolistComponent_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../components/TodolistComponent.vue */ "./resources/js/components/TodolistComponent.vue"));
     }
   }],
   meta: {
@@ -23821,6 +23821,7 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.createStore)({
                 _context2.next = 5;
                 return axios(config).then(function (_ref5) {
                   var data = _ref5.data;
+                  console.log(data);
 
                   if (data.err) {
                     return data;
@@ -68020,7 +68021,7 @@ function useRoute() {
 /******/ 		// This function allow to reference async chunks
 /******/ 		__webpack_require__.u = (chunkId) => {
 /******/ 			// return url for filenames not based on template
-/******/ 			if ({"resources_js_page_LoginPage_vue":1,"resources_js_page_RegisterPage_vue":1,"resources_js_page_HomePage_vue":1,"resources_js_components_ListComponent_vue":1,"resources_js_components_CreateComponent_vue":1,"resources_js_page_PathNotFound_vue":1}[chunkId]) return "js/" + chunkId + ".js";
+/******/ 			if ({"resources_js_page_LoginPage_vue":1,"resources_js_page_RegisterPage_vue":1,"resources_js_page_HomePage_vue":1,"resources_js_components_CreateComponent_vue":1,"resources_js_components_TodolistComponent_vue":1,"resources_js_page_PathNotFound_vue":1}[chunkId]) return "js/" + chunkId + ".js";
 /******/ 			// return url for filenames based on template
 /******/ 			return undefined;
 /******/ 		};

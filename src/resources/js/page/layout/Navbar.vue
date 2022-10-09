@@ -22,7 +22,7 @@
                         <router-link
                             class="nav-link active"
                             :to="{
-                                name: 'todo-list',
+                                name: 'test',
                                 params: { page: 1, completed: 0 },
                             }"
                             >Todo-list</router-link
