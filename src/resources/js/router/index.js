@@ -20,9 +20,21 @@ const routes = [
         }
     },
     {
-        path: '/',
+        path: '/home',
         name: 'home',
         component: () => import('../page/HomePage.vue'),
+        children: [
+            {
+                path: 'todolist',
+                name: "todo-list",
+                component: () => import('../components/ListComponent.vue'),
+            },
+            {
+                path: 'create',
+                name: "create",
+                component: () => import('../components/CreateComponent.vue'),
+            }
+        ],
         meta: {
             title: "Home",
             middleware: "auth:api",
@@ -46,8 +58,8 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title
     if (to.meta.middleware == "guest") {
-        if (store.state.authenticated) {
-            next({ name: "home" })
+        if (store.state.authenticated){
+            next({name: "todo-list"})
         }
         next()
     } else {

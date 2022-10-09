@@ -30,7 +30,6 @@ services:
     container_name: myadmin
     ports:
       - 90:80
-    restart: always
     environment:
       PMA_HOST: mysql
       MYSQL_ROOT_PASSWORD: secret

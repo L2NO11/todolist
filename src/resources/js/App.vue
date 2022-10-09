@@ -7,7 +7,7 @@ import { onMounted } from "vue";
 import { useStore } from "vuex";
 onMounted(() => {
     const store = useStore();
-    store.dispatch("checklogined");
+    store.dispatch("init");
 });
 </script>
 

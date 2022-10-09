@@ -17,7 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('content');
             $table->boolean('completed')->default(false);
+            $table->dateTime('at');
             $table->foreignId('user_id')->onDelete('cascade');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

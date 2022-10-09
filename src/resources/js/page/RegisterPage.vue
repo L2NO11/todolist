@@ -54,9 +54,16 @@
                     class="form-control"
                     v-model="confirm_password"
                 />
+                <label v-if="confirm_password_pass"
+                    >Please Confirm password</label
+                >
             </div>
             <div class="d-grid gap-2 col-6 mx-auto">
-                <button class="btn btn-primary btn-block" @click="register">
+                <button
+                    class="btn btn-primary btn-block"
+                    @click="register"
+                    :disabled="confirm_password_pass"
+                >
                     Register
                 </button>
                 <label class="mx-auto"
@@ -71,6 +78,8 @@
 </template>
 <script>
 import { reactive, ref, watchEffect } from "vue";
+import { useRouter } from "vue-router";
+import Swal from "sweetalert2";
 export default {
     name: "RegisterPage",
     setup() {
@@ -80,6 +89,7 @@ export default {
             email: "",
             password: "",
         });
+        const router = useRouter();
         const confirm_password = ref("");
         const confirm_password_pass = ref(true);
         const errors = reactive({
@@ -108,6 +118,13 @@ export default {
             if (result.data.err) {
                 Object.assign(errors, result.data.msg);
                 console.log(errors);
+            } else {
+                Swal.fire({
+                    title: "Register Success",
+                    icon: "success",
+                }).then(() => {
+                    router.push({ name: "login" });
+                });
             }
         };
         return {
@@ -116,6 +133,7 @@ export default {
             register,
             errors,
             process,
+            confirm_password_pass,
         };
     },
 };

@@ -77,8 +77,9 @@ export default {
                     title: "Login Success",
                     text: "You have been logged-in successfully.",
                     icon: "success",
+                }).then(() => {
+                    router.push({ name: "home" });
                 });
-                router.push({ name: "home" });
             }
         };
         return {

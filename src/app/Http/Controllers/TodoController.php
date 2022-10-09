@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Validator;
 
 class TodoController extends Controller
 {
-    public function getAll(Request $request){
+    public function getAll(Request $request)
+    {
         $validator = Validator::make($request->all(), [
             "completed" => ['boolean']
         ]);
@@ -20,18 +21,19 @@ class TodoController extends Controller
             ]);
         }
         $qury = Todo::where('user_id', $request->user()->id);
-        if($request->completed != null){
-            $qury->where("completed",$request->completed);
+        if ($request->completed != null) {
+            $qury->where("completed", $request->completed);
         }
-        $todolist = $qury->get();
+        $todolist = $qury->orderBy('id', 'DESC')->get();
         return response()->json([
-            "user" => $request->user(),
             "todo" => $todolist
         ]);
     }
-    public function addTodo(Request $request){
+    public function addTodo(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            "content" => ["required","string","max:255"],
+            "content" => ["required", "string", "max:255"],
+            "at" => ["required"],
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -41,9 +43,10 @@ class TodoController extends Controller
         }
         $result = Todo::create([
             "content" => $request->content,
+            "at" => $request->at,
             "user_id" => $request->user()->id,
         ]);
-        if(!$result){
+        if (!$result) {
             return response()->json([
                 "err" => true,
                 'msg' => 'can not register user'
@@ -54,9 +57,10 @@ class TodoController extends Controller
             'msg' => 'success'
         ]);
     }
-    public function findWithDate(Request $request){
+    public function findWithDate(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            "date" => ["required","string","min:10","max:10",'regex:/^[1-9]{1}[\d]{3}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/i'],
+            "date" => ["required", "string", "min:10", "max:10", 'regex:/^[1-9]{1}[\d]{3}-(0[1-9]|1[012])-(0[1-9]|[12]\d|3[01])$/i'],
             "completed" => ['boolean']
         ]);
         if ($validator->fails()) {
@@ -66,10 +70,10 @@ class TodoController extends Controller
             ]);
         }
         $qury = DB::table('todos')
-            ->whereDate("created_at",$request->date)
+            ->whereDate("created_at", $request->date)
             ->orderByDesc("created_at");
-        if($request->completed != null){
-            $qury->where("completed",$request->completed);
+        if ($request->completed != null) {
+            $qury->where("completed", $request->completed);
         }
         $todolist = $qury->get();
         return response()->json([
@@ -77,9 +81,10 @@ class TodoController extends Controller
             "todo" => $todolist
         ]);
     }
-    public function findJob(Request $request){
+    public function findJob(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            "job" => ["required","string","min:8"],
+            "job" => ["required", "string", "min:8"],
             "completed" => ['boolean']
         ]);
         if ($validator->fails()) {
@@ -89,10 +94,10 @@ class TodoController extends Controller
             ]);
         }
         $qury = DB::table('todos')
-            ->where("content",$request->job)
+            ->where("content", $request->job)
             ->orderByDesc("created_at");
-        if($request->completed != null){
-            $qury->where("completed",$request->completed);
+        if ($request->completed != null) {
+            $qury->where("completed", $request->completed);
         }
         $todolist = $qury->get();
         return response()->json([
@@ -100,9 +105,10 @@ class TodoController extends Controller
             "todo" => $todolist
         ]);
     }
-    public function changeJobName(Request $request){
+    public function changeJobName(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            "fname" => ["required","string","min:8"],
+            "fname" => ["required", "string", "min:8"],
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -118,27 +124,30 @@ class TodoController extends Controller
             "msg" => "success"
         ]);
     }
-    public function makeComplete(Request $request){
+    public function makeComplete(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            "id" => ["required","string"],
+            "id" => ["required", "string"],
         ]);
         if ($validator->fails()) {
             return response()->json([
                 "err" => true,
-                'msg' => $validator->messages()->get('*')
+                'msg' => $validator->messages()->get('*'),
             ]);
         }
-        Todo::find($request->id)
-            ->update([
-                "completed" => true
-            ]);
+        $todo = Todo::find($request->id);
+        $todo->completed = true;
+        $todo->update();
+
         return response()->json([
-            "msg" => "success"
+            "msg" => "success",
+            "sss" => $todo
         ]);
     }
-    public function deleteJob(Request $request){
+    public function deleteJob(Request $request)
+    {
         $validator = Validator::make($request->all(), [
-            "id" => ["required","string"],
+            "id" => ["required", "string"],
         ]);
         if ($validator->fails()) {
             return response()->json([

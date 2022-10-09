@@ -23,7 +23,7 @@ Route::group(['prefix' => 'auth', 'as' => 'auth.'], function () {
 
 Route::group(['prefix' => 'todo', 'as' => 'todo.', "middleware" => "auth:api"], function () {
     Route::get('/all', [TodoController::class, 'getAll']);
-    Route::get('/add', [TodoController::class, 'addTodo']);
+    Route::post('/add', [TodoController::class, 'addTodo']);
     Route::delete('/delete', [TodoController::class, 'deleteJob']);
     Route::group(['prefix' => 'find', 'as' => 'find.'], function () {
         Route::get('/date', [TodoController::class, 'findWithDate']);

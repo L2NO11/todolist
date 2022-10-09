@@ -12,10 +12,10 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "fname" => ["required","string"],
-            "lname" => ["required","string"],
-            "email" => ["required","string","email","unique:users,email"],
-            "password" => ["required","string","min:8"],
+            "fname" => ["required", "string"],
+            "lname" => ["required", "string"],
+            "email" => ["required", "string", "email", "unique:users,email"],
+            "password" => ["required", "string", "min:8"],
         ]);
 
         if ($validator->fails()) {
@@ -31,7 +31,7 @@ class AuthController extends Controller
             "email" => $request->email,
             "password" => bcrypt($request->password)
         ]);
-        if(!$result){
+        if (!$result) {
             return response()->json([
                 "err" => true,
                 'msg' => 'can not register user'
