@@ -1,16 +1,16 @@
 [x]login
 [x]register
 
-[w]add todo in list of each user 
-[]read todolist of each user
-[]delete todo in list of each user
-[]update todo in list of each user
+[x]add todo in list of each user 
+[x]read todolist of each user
+[x]delete todo in list of each user
+[x]update todo in list of each user
 
-[]todolist paginagetion for easy watch.
+[x]todolist paginagetion for easy watch.
 search by
  - [] create time
  - [] todo name
-[]check box for filter completed and incompleted
+[x]check box for filter completed and incompleted
 []real delete
 
 -----------------------------------------------
