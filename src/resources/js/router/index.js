@@ -25,7 +25,7 @@ const routes = [
         component: () => import('../page/HomePage.vue'),
         children: [
             {
-                path: 'todolist',
+                path: 'todolist/:page/:completed',
                 name: "todo-list",
                 component: () => import('../components/ListComponent.vue'),
             },
@@ -59,7 +59,7 @@ router.beforeEach((to, from, next) => {
     document.title = to.meta.title
     if (to.meta.middleware == "guest") {
         if (store.state.authenticated){
-            next({name: "todo-list"})
+            next({name: "home"})
         }
         next()
     } else {

@@ -21,7 +21,10 @@
                     <li class="nav-item">
                         <router-link
                             class="nav-link active"
-                            :to="{ name: 'todo-list' }"
+                            :to="{
+                                name: 'todo-list',
+                                params: { page: 1, completed: 0 },
+                            }"
                             >Todo-list</router-link
                         >
                     </li>

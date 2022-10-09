@@ -48,7 +48,7 @@ const store = createStore({
                 commit('SET_AUTHENTICATED',false)
             })
         },
-        init({commit,getters}){
+        init({commit}){
             const token = localStorage.getItem("token");
             if (token) {
                 const decrypted = JSON.parse(AES.decrypt(token, process.env.MIX_MY_STORAGE_KEY).toString(enc.Utf8));
@@ -62,6 +62,69 @@ const store = createStore({
                     localStorage.clear();
                 }
             }
+        },
+        async getTodolist({commit,state},params){
+            const { access_token } = state.token;
+            const config = {
+                method: "get",
+                url: "/api/todo/all",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + access_token,
+                },
+                params
+            };
+            return await axios(config).then(({data}) => {
+                if(data.err){
+                    return data;
+                }
+                commit("SET_TODOLIST", [...data.todo]);
+                return { err: false, allpage: data.countPage };
+            }).catch(()=>{
+                return { err: true};
+            });
+        },
+        async deleteTodo({commit,state},id){
+            const { access_token } = state.token;
+            const config = {
+                method: "delete",
+                url: "/api/todo/delete",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + access_token,
+                },
+                data: {
+                    id: `${id}`,
+                },
+            };
+            const data = await axios(config)
+                .then((resp) => {
+                    return true;
+                })
+                .catch(()=>{
+                    return false;
+                })
+            return data
+        },
+        async done({commit,state},id){
+            const { access_token } = state.token;
+            const config = {
+                method: "put",
+                url: "/api/todo/update/complete",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + access_token,
+                },
+                data: {
+                    id: `${id}`,
+                },
+            };
+            const data = await axios(config).then(()=>{
+                return true;
+            }).catch(()=>{
+                return false
+            })
+            return data
         },
         logout({commit}){
             localStorage.clear();
