@@ -84,6 +84,27 @@ const store = createStore({
                 return { err: true};
             });
         },
+        async getTodolistWithDate({commit,state},params){
+            const { access_token } = state.token;
+            const config = {
+                method: "get",
+                url: "/api/todo/find/date",
+                headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + access_token,
+                },
+                params
+            };
+            return await axios(config).then(({data}) => {
+                if(data.err){
+                    return data;
+                }
+                commit("SET_TODOLIST", [...data.todo]);
+                return { err: false, allpage: data.countPage };
+            }).catch(()=>{
+                return { err: true};
+            });
+        },
         async deleteTodo({commit,state},id){
             const { access_token } = state.token;
             const config = {
