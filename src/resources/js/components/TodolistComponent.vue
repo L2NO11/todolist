@@ -8,22 +8,27 @@
                 @selectChange="selectChange"
                 :isCompleted="newIsComplete"
             ></filterComponent>
-            <ListComponent
-                :todolist="data.todolist"
-                :isCompleted="newIsComplete"
-                @doneTodo="doneTodo"
-                @deleteTodo="deleteTodo"
-            ></ListComponent>
-            <PaginationComponent
-                :paginate="data.pagination"
-                :isCompleted="newIsComplete"
-            ></PaginationComponent>
+            <h3 class="my-5 text-center" v-if="data.notFoundTodos">
+                Not Found Todo List.
+            </h3>
+            <div v-else>
+                <ListComponent
+                    :todolist="data.todolist"
+                    :isCompleted="newIsComplete"
+                    @doneTodo="doneTodo"
+                    @deleteTodo="deleteTodo"
+                ></ListComponent>
+                <PaginationComponent
+                    :paginate="data.pagination"
+                    :isCompleted="newIsComplete"
+                ></PaginationComponent>
+            </div>
         </div>
     </div>
     <h2 class="my-5 text-center" v-else>Loading.....</h2>
 </template>
 <script>
-import { onMounted, reactive, computed, watchEffect } from "vue";
+import { onMounted, reactive, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import filterComponent from "./FilterComponent.vue";
@@ -39,6 +44,7 @@ export default {
         const data = reactive({
             Loading: true,
             isCompleted: null,
+            notFoundTodos: false,
             pagination: {
                 all: null,
                 curr: null,
@@ -79,6 +85,36 @@ export default {
                 .dispatch("getTodolist", params)
                 .then((resp) => {
                     console.log("resp", resp);
+                    if (resp.err && resp.msg === "Notfound page") {
+                        data.notFoundTodos = true;
+                        data.Loading = false;
+                        return;
+                    }
+                    data.todolist = store.getters.todolist;
+                    let { page, completed } = params;
+                    setPaginate(resp.allpage, page);
+                    data.isCompleted = completed;
+                    data.Loading = false;
+                })
+                .catch(() => {
+                    data.error.status = true;
+                    data.error.msg = "!!Something wrong!!";
+                    data.Loading = false;
+                });
+        };
+        const refreshWithDate = async () => {
+            data.Loading = true;
+            const params = getParams();
+            params["date"] = route.query.searchDate;
+            await store
+                .dispatch("getTodolistWithDate", params)
+                .then((resp) => {
+                    console.log("resp", resp);
+                    if (resp.err && resp.msg === "Notfound page") {
+                        data.notFoundTodos = true;
+                        data.Loading = false;
+                        return;
+                    }
                     data.todolist = store.getters.todolist;
                     let { page, completed } = params;
                     setPaginate(resp.allpage, page);
@@ -93,13 +129,22 @@ export default {
         };
         onMounted(async () => {
             try {
-                await refreshPage();
+                superRefresh();
             } catch (err) {
                 console.log(err.toString);
             }
         });
-        watchEffect(async () => {
-            refreshPage();
+        const superRefresh = () => {
+            if (!route.query.isAll || route.query.isAll === "true") {
+                refreshPage();
+            } else {
+                const date = route.query.searchDate;
+                console.log(date);
+                refreshWithDate();
+            }
+        };
+        watch(route, async () => {
+            superRefresh();
         });
         const newIsComplete = computed(() => {
             return route.params.completed;
@@ -124,7 +169,7 @@ export default {
                         text: textSucess,
                         icon: "success",
                     }).then(() => {
-                        refreshPage();
+                        superRefresh();
                     });
                 } else {
                     Swal.fire({

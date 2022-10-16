@@ -23821,7 +23821,6 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.createStore)({
                 _context2.next = 5;
                 return axios(config).then(function (_ref5) {
                   var data = _ref5.data;
-                  console.log(data);
 
                   if (data.err) {
                     return data;
@@ -23849,14 +23848,62 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.createStore)({
         }, _callee2);
       }))();
     },
-    deleteTodo: function deleteTodo(_ref6, id) {
+    getTodolistWithDate: function getTodolistWithDate(_ref6, params) {
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3() {
-        var commit, state, access_token, config, data;
+        var commit, state, access_token, config;
         return _regeneratorRuntime().wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
                 commit = _ref6.commit, state = _ref6.state;
+                access_token = state.token.access_token;
+                config = {
+                  method: "get",
+                  url: "/api/todo/find/date",
+                  headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + access_token
+                  },
+                  params: params
+                };
+                _context3.next = 5;
+                return axios(config).then(function (_ref7) {
+                  var data = _ref7.data;
+
+                  if (data.err) {
+                    return data;
+                  }
+
+                  commit("SET_TODOLIST", _toConsumableArray(data.todo));
+                  return {
+                    err: false,
+                    allpage: data.countPage
+                  };
+                })["catch"](function () {
+                  return {
+                    err: true
+                  };
+                });
+
+              case 5:
+                return _context3.abrupt("return", _context3.sent);
+
+              case 6:
+              case "end":
+                return _context3.stop();
+            }
+          }
+        }, _callee3);
+      }))();
+    },
+    deleteTodo: function deleteTodo(_ref8, id) {
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
+        var commit, state, access_token, config, data;
+        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                commit = _ref8.commit, state = _ref8.state;
                 access_token = state.token.access_token;
                 config = {
                   method: "delete",
@@ -23869,47 +23916,8 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.createStore)({
                     id: "".concat(id)
                   }
                 };
-                _context3.next = 5;
-                return axios(config).then(function (resp) {
-                  return true;
-                })["catch"](function () {
-                  return false;
-                });
-
-              case 5:
-                data = _context3.sent;
-                return _context3.abrupt("return", data);
-
-              case 7:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
-    },
-    done: function done(_ref7, id) {
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-        var commit, state, access_token, config, data;
-        return _regeneratorRuntime().wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                commit = _ref7.commit, state = _ref7.state;
-                access_token = state.token.access_token;
-                config = {
-                  method: "put",
-                  url: "/api/todo/update/complete",
-                  headers: {
-                    Accept: "application/json",
-                    Authorization: "Bearer " + access_token
-                  },
-                  data: {
-                    id: "".concat(id)
-                  }
-                };
                 _context4.next = 5;
-                return axios(config).then(function () {
+                return axios(config).then(function (resp) {
                   return true;
                 })["catch"](function () {
                   return false;
@@ -23927,8 +23935,47 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.createStore)({
         }, _callee4);
       }))();
     },
-    logout: function logout(_ref8) {
-      var commit = _ref8.commit;
+    done: function done(_ref9, id) {
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+        var commit, state, access_token, config, data;
+        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                commit = _ref9.commit, state = _ref9.state;
+                access_token = state.token.access_token;
+                config = {
+                  method: "put",
+                  url: "/api/todo/update/complete",
+                  headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + access_token
+                  },
+                  data: {
+                    id: "".concat(id)
+                  }
+                };
+                _context5.next = 5;
+                return axios(config).then(function () {
+                  return true;
+                })["catch"](function () {
+                  return false;
+                });
+
+              case 5:
+                data = _context5.sent;
+                return _context5.abrupt("return", data);
+
+              case 7:
+              case "end":
+                return _context5.stop();
+            }
+          }
+        }, _callee5);
+      }))();
+    },
+    logout: function logout(_ref10) {
+      var commit = _ref10.commit;
       localStorage.clear();
       commit('SET_TOKEN', {});
       commit('SET_AUTHENTICATED', false);

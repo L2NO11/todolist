@@ -6,6 +6,7 @@
             <tr>
                 <th scope="col">ID</th>
                 <th scope="col">Todo</th>
+                <th scope="col">When</th>
                 <th scope="col">Completed</th>
                 <th v-if="isCompleted != 1" scope="col">Done</th>
                 <th scope="col">Delete</th>
@@ -14,7 +15,8 @@
         <tbody>
             <tr v-for="todo in todolist" :key="todo.id">
                 <th>{{ todo.id }}</th>
-                <th>{{ todo.content }}</th>
+                <td>{{ todo.content }}</td>
+                <td>{{ todo.at }}</td>
                 <td>
                     {{ todo.completed === 1 ? "True" : "False" }}
                 </td>
