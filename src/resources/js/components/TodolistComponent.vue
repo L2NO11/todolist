@@ -31,6 +31,7 @@
 import { onMounted, reactive, computed, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
+import { Todo } from "../mixin";
 import filterComponent from "./FilterComponent.vue";
 import ListComponent from "./ListComponent.vue";
 import PaginationComponent from "./PaginationComponent.vue";
@@ -127,6 +128,47 @@ export default {
                     data.Loading = false;
                 });
         };
+        const refreshWithName = async () => {
+            data.Loading = true;
+            const params = getParams();
+            params["job"] = route.query.job;
+            await store
+                .dispatch("getTodolistWithName", params)
+                .then((resp) => {
+                    console.log("resp", resp);
+                    if (resp.err && resp.msg === "Notfound page") {
+                        data.notFoundTodos = true;
+                        data.Loading = false;
+                        return;
+                    }
+                    data.todolist = store.getters.todolist;
+                    console.log(data.todolist);
+                    let { page, completed } = params;
+                    setPaginate(resp.allpage, page);
+                    data.isCompleted = completed;
+                    data.Loading = false;
+                })
+                .catch(() => {
+                    data.error.status = true;
+                    data.error.msg = "!!Something wrong!!";
+                    data.Loading = false;
+                });
+        };
+        const superRefresh = () => {
+            if (
+                (!route.query.isAll || route.query.isAll === "true") &&
+                !route.query.job
+            ) {
+                refreshPage();
+            } else if (route.query.job) {
+                console.log(route.query.job);
+                refreshWithName();
+            } else {
+                const date = route.query.searchDate;
+                console.log(date);
+                refreshWithDate();
+            }
+        };
         onMounted(async () => {
             try {
                 superRefresh();
@@ -134,15 +176,6 @@ export default {
                 console.log(err.toString);
             }
         });
-        const superRefresh = () => {
-            if (!route.query.isAll || route.query.isAll === "true") {
-                refreshPage();
-            } else {
-                const date = route.query.searchDate;
-                console.log(date);
-                refreshWithDate();
-            }
-        };
         watch(route, async () => {
             superRefresh();
         });
@@ -159,25 +192,6 @@ export default {
             router.push({
                 name: "test",
                 params: { page: "1", completed: completed },
-            });
-        };
-        const Todo = async (dispatchName, id, textSucess, textFailed) => {
-            await store.dispatch(dispatchName, id).then((status) => {
-                if (status) {
-                    Swal.fire({
-                        title: "Success",
-                        text: textSucess,
-                        icon: "success",
-                    }).then(() => {
-                        superRefresh();
-                    });
-                } else {
-                    Swal.fire({
-                        title: "Failed",
-                        text: textFailed,
-                        icon: "warning",
-                    });
-                }
             });
         };
         const doneTodo = async (id) => {

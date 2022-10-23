@@ -14,6 +14,20 @@
                 <option value="1">Completed</option>
             </select>
         </div>
+        <div class="input-group justify-content-center w-75">
+            <label class="input-group-text" for="inputGroupSelect01"
+                >Task name
+            </label>
+            <input
+                type="text"
+                v-model="taskName"
+                class="form-control w-full"
+                placeholder="Enter Todo's Name"
+            />
+            <button @click="find" type="submit" class="btn btn-primary">
+                Search
+            </button>
+        </div>
         <div class="supernoob">
             <div class="input-group-text">
                 <input
@@ -55,11 +69,26 @@ export default {
         };
         const dateIsCheck = ref(true);
         const date = ref("");
+        const taskName = ref("");
         onMounted(() => {
-            const { isAll, searchDate } = route.query;
+            const { isAll, searchDate, job = "" } = route.query;
             dateIsCheck.value = isAll === "true" || !isAll;
             date.value = searchDate;
+            taskName.value = job;
         });
+        const find = () => {
+            const config = {
+                name: "test",
+                params: {
+                    page: 1,
+                    completed: route.params.completed,
+                },
+                query: {
+                    job: taskName.value,
+                },
+            };
+            router.push(config);
+        };
         const submit = () => {
             const config = {
                 name: "test",
@@ -80,6 +109,8 @@ export default {
             router.push(config);
         };
         return {
+            find,
+            taskName,
             filterCompleted,
             change,
             dateIsCheck,
@@ -105,5 +136,11 @@ div.runcan {
 div.supernoob {
     display: flex;
     width: 100%;
+}
+
+.find-with-name {
+    display: flex;
+    width: 50%;
+    margin: 0 auto;
 }
 </style>
