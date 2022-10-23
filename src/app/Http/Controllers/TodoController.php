@@ -87,9 +87,6 @@ class TodoController extends Controller
             ->where('completed', $request->completed)
             ->whereDate("at", $request->date)
             ->orderByDesc("id");
-        if ($request->completed != null) {
-            $qury->where("completed", $request->completed);
-        }
         $count =  ceil(($qury->count('id')) / 5);
         if ($count < $request->page || $request->page < 0) {
             return response()->json(["err" => true, "msg" => "Notfound page"], 200);
@@ -106,8 +103,9 @@ class TodoController extends Controller
     public function findJob(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            "job" => ["required", "string", "min:8"],
-            "completed" => ['boolean']
+            "job" => ["required", "string", "min:1"],
+            "completed" => ["required", 'boolean'],
+            "page" => ["required", "integer"]
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -116,14 +114,16 @@ class TodoController extends Controller
             ]);
         }
         $qury = DB::table('todos')
+            ->where("user_id", $request->user()->id)
+            ->where('completed', $request->completed)
             ->where("content", $request->job)
             ->orderByDesc("created_at");
-        if ($request->completed != null) {
-            $qury->where("completed", $request->completed);
-        }
-        $todolist = $qury->get();
+        $count =  ceil(($qury->count('id')) / 5);
+        $todolist = $qury->offset(5 * ($request->page - 1))
+            ->limit(5)->get();
         return response()->json([
             "user" => $request->user()->id,
+            "countPage" => $count,
             "todo" => $todolist
         ]);
     }

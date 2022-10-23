@@ -1,75 +1,74 @@
-import {createRouter, createWebHistory } from 'vue-router'
-import store from '../store'
+import { createRouter, createWebHistory } from "vue-router";
+import store from "../store";
 const routes = [
     {
         name: "login",
         path: "/login",
-        component:  () => import('../page/LoginPage.vue'),
+        component: () => import("../page/LoginPage.vue"),
         meta: {
             middleware: "guest",
-            title: `Login`
-        }
+            title: `Login`,
+        },
     },
     {
         name: "register",
         path: "/register",
-        component:  () => import('../page/RegisterPage.vue'),
+        component: () => import("../page/RegisterPage.vue"),
         meta: {
             middleware: "guest",
-            title: `Register`
-        }
+            title: `Register`,
+        },
     },
     {
-        path: '/home',
-        name: 'home',
-        component: () => import('../page/HomePage.vue'),
+        path: "/home",
+        name: "home",
+        component: () => import("../page/HomePage.vue"),
         children: [
             {
-                path: 'create',
+                path: "create",
                 name: "create",
-                component: () => import('../components/CreateComponent.vue'),
+                component: () => import("../components/CreateComponent.vue"),
             },
             {
-                path: 'todolist/:page/:completed',
+                path: "todolist/:page/:completed",
                 name: "test",
-                component: () => import('../components/TodolistComponent.vue'),
+                component: () => import("../components/TodolistComponent.vue"),
             },
-
         ],
         meta: {
             title: "Home",
             middleware: "auth:api",
-        }
+        },
     },
     {
-        path: '/:pathMatch(.*)*',
-        name: 'notfound',
-        component: () => import('../page/PathNotFound.vue'),
+        path: "/:pathMatch(.*)*",
+        name: "notfound",
+        component: () => import("../page/PathNotFound.vue"),
         meta: {
             title: "Not Found",
-        }
+        },
     },
 ];
 
 const router = createRouter({
     history: createWebHistory(),
-    routes
+    routes,
 });
 
 router.beforeEach((to, from, next) => {
-    document.title = to.meta.title
+    document.title = to.meta.title;
     if (to.meta.middleware == "guest") {
-        if (store.state.authenticated){
-            next({name: "home"})
+        if (store.state.authenticated) {
+            next({ name: "home" });
         }
-        next()
+        next();
     } else {
         if (store.state.authenticated) {
-            next()
+            next();
         } else {
-            next({ name: "login" })
+            next({ name: "login" });
         }
     }
-})
+});
 
 export default router;

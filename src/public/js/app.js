@@ -23611,19 +23611,19 @@ var routes = [{
     title: "Register"
   }
 }, {
-  path: '/home',
-  name: 'home',
+  path: "/home",
+  name: "home",
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_page_HomePage_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../page/HomePage.vue */ "./resources/js/page/HomePage.vue"));
   },
   children: [{
-    path: 'create',
+    path: "create",
     name: "create",
     component: function component() {
       return __webpack_require__.e(/*! import() */ "resources_js_components_CreateComponent_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../components/CreateComponent.vue */ "./resources/js/components/CreateComponent.vue"));
     }
   }, {
-    path: 'todolist/:page/:completed',
+    path: "todolist/:page/:completed",
     name: "test",
     component: function component() {
       return __webpack_require__.e(/*! import() */ "resources_js_components_TodolistComponent_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../components/TodolistComponent.vue */ "./resources/js/components/TodolistComponent.vue"));
@@ -23634,8 +23634,8 @@ var routes = [{
     middleware: "auth:api"
   }
 }, {
-  path: '/:pathMatch(.*)*',
-  name: 'notfound',
+  path: "/:pathMatch(.*)*",
+  name: "notfound",
   component: function component() {
     return __webpack_require__.e(/*! import() */ "resources_js_page_PathNotFound_vue").then(__webpack_require__.bind(__webpack_require__, /*! ../page/PathNotFound.vue */ "./resources/js/page/PathNotFound.vue"));
   },
@@ -23752,23 +23752,23 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.createStore)({
               case 0:
                 commit = _ref.commit;
                 requestBody = _objectSpread(_objectSpread({
-                  "grant_type": "password",
-                  "client_id": "1",
-                  "client_secret": "fXJpqoeFFKA2AkC7gtggTHwcyt0E9n5TbdxFue36"
+                  grant_type: "password",
+                  client_id: "1",
+                  client_secret: "fXJpqoeFFKA2AkC7gtggTHwcyt0E9n5TbdxFue36"
                 }, body), {}, {
-                  "scope": "*"
+                  scope: "*"
                 });
                 _context.next = 4;
-                return axios.post('/oauth/token', requestBody).then(function (_ref2) {
+                return axios.post("/oauth/token", requestBody).then(function (_ref2) {
                   var data = _ref2.data;
                   data.start = new Date();
-                  commit('SET_TOKEN', data);
-                  commit('SET_AUTHENTICATED', true);
+                  commit("SET_TOKEN", data);
+                  commit("SET_AUTHENTICATED", true);
                   var envryptedString = crypto_js__WEBPACK_IMPORTED_MODULE_0__.AES.encrypt(JSON.stringify(data), "LOTUSOGOOD");
-                  localStorage.setItem('token', envryptedString);
+                  localStorage.setItem("token", envryptedString);
                 })["catch"](function (data) {
-                  commit('SET_TOKEN', {});
-                  commit('SET_AUTHENTICATED', false);
+                  commit("SET_TOKEN", {});
+                  commit("SET_AUTHENTICATED", false);
                 });
 
               case 4:
@@ -23792,8 +23792,8 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.createStore)({
         var expires_in = decrypted.expires_in;
 
         if (expires_in > lifetime) {
-          commit('SET_TOKEN', decrypted);
-          commit('SET_AUTHENTICATED', true);
+          commit("SET_TOKEN", decrypted);
+          commit("SET_AUTHENTICATED", true);
           console.log("init success");
         } else {
           localStorage.clear();
@@ -23896,14 +23896,62 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.createStore)({
         }, _callee3);
       }))();
     },
-    deleteTodo: function deleteTodo(_ref8, id) {
+    getTodolistWithName: function getTodolistWithName(_ref8, params) {
       return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4() {
-        var commit, state, access_token, config, data;
+        var commit, state, access_token, config;
         return _regeneratorRuntime().wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
                 commit = _ref8.commit, state = _ref8.state;
+                access_token = state.token.access_token;
+                config = {
+                  method: "get",
+                  url: "/api/todo/find/job",
+                  headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + access_token
+                  },
+                  params: params
+                };
+                _context4.next = 5;
+                return axios(config).then(function (_ref9) {
+                  var data = _ref9.data;
+
+                  if (data.err) {
+                    return data;
+                  }
+
+                  commit("SET_TODOLIST", _toConsumableArray(data.todo));
+                  return {
+                    err: false,
+                    allpage: data.countPage
+                  };
+                })["catch"](function () {
+                  return {
+                    err: true
+                  };
+                });
+
+              case 5:
+                return _context4.abrupt("return", _context4.sent);
+
+              case 6:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4);
+      }))();
+    },
+    deleteTodo: function deleteTodo(_ref10, id) {
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
+        var commit, state, access_token, config, data;
+        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                commit = _ref10.commit, state = _ref10.state;
                 access_token = state.token.access_token;
                 config = {
                   method: "delete",
@@ -23916,47 +23964,8 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.createStore)({
                     id: "".concat(id)
                   }
                 };
-                _context4.next = 5;
-                return axios(config).then(function (resp) {
-                  return true;
-                })["catch"](function () {
-                  return false;
-                });
-
-              case 5:
-                data = _context4.sent;
-                return _context4.abrupt("return", data);
-
-              case 7:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4);
-      }))();
-    },
-    done: function done(_ref9, id) {
-      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5() {
-        var commit, state, access_token, config, data;
-        return _regeneratorRuntime().wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                commit = _ref9.commit, state = _ref9.state;
-                access_token = state.token.access_token;
-                config = {
-                  method: "put",
-                  url: "/api/todo/update/complete",
-                  headers: {
-                    Accept: "application/json",
-                    Authorization: "Bearer " + access_token
-                  },
-                  data: {
-                    id: "".concat(id)
-                  }
-                };
                 _context5.next = 5;
-                return axios(config).then(function () {
+                return axios(config).then(function (resp) {
                   return true;
                 })["catch"](function () {
                   return false;
@@ -23974,11 +23983,50 @@ var store = (0,vuex__WEBPACK_IMPORTED_MODULE_1__.createStore)({
         }, _callee5);
       }))();
     },
-    logout: function logout(_ref10) {
-      var commit = _ref10.commit;
+    done: function done(_ref11, id) {
+      return _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6() {
+        var commit, state, access_token, config, data;
+        return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+          while (1) {
+            switch (_context6.prev = _context6.next) {
+              case 0:
+                commit = _ref11.commit, state = _ref11.state;
+                access_token = state.token.access_token;
+                config = {
+                  method: "put",
+                  url: "/api/todo/update/complete",
+                  headers: {
+                    Accept: "application/json",
+                    Authorization: "Bearer " + access_token
+                  },
+                  data: {
+                    id: "".concat(id)
+                  }
+                };
+                _context6.next = 5;
+                return axios(config).then(function () {
+                  return true;
+                })["catch"](function () {
+                  return false;
+                });
+
+              case 5:
+                data = _context6.sent;
+                return _context6.abrupt("return", data);
+
+              case 7:
+              case "end":
+                return _context6.stop();
+            }
+          }
+        }, _callee6);
+      }))();
+    },
+    logout: function logout(_ref12) {
+      var commit = _ref12.commit;
       localStorage.clear();
-      commit('SET_TOKEN', {});
-      commit('SET_AUTHENTICATED', false);
+      commit("SET_TOKEN", {});
+      commit("SET_AUTHENTICATED", false);
       console.log("logout success");
     }
   }

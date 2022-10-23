@@ -11,6 +11,7 @@
                 <router-link class="page-link" :to="{
                     name: 'test',
                     params: { page: i, completed: isCompleted },
+                    query: getQuery()
                 }">{{ i }}</router-link>
             </li>
             <li v-if="paginate.next !== null" class="page-item">
@@ -24,23 +25,29 @@
 </template>
 <script>
 import { onMounted, ref, watchEffect } from "vue";
+import { useRoute } from "vue-router";
 export default {
     name: "PaginationComponent",
     props: ["paginate", "isCompleted"],
     setup(props, { emit }) {
         const paginate = ref(props.paginate);
         const isCompleted = ref(props.isCompleted);
+        const route = useRoute();
         onMounted(() => {});
         watchEffect(() => {
             paginate.value = props.paginate;
             isCompleted.value = props.isCompleted;
         });
+        const getQuery = () => {
+            return route.query;
+        };
         const isActive = (i) => {
             const actions = { "page-item": true };
             actions.active = paginate.value.curr === i;
             return actions;
         };
         return {
+            getQuery,
             paginate,
             isCompleted,
             isActive,
